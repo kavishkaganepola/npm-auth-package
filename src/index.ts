@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
 
-export function redisConnection(
+export async function redisConnection(
   REDIS_HOST: string,
   REDIS_PORT: string,
   REDIS_PASSWORD: string,
