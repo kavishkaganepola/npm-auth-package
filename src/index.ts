@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
 
-export class authentication {
+export class Authentication {
   async redisConnection(
     REDIS_HOST: string,
     REDIS_PORT: string,
