@@ -1,0 +1,26 @@
+{
+  "name": "npm-auth-package",
+  "version": "0.0.2",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kavishkaganepola/npm-auth-package.git"
+  },
+  "author": "Kavishka Ganepola",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kavishkaganepola/npm-auth-package/issues"
+  },
+  "homepage": "https://github.com/kavishkaganepola/npm-auth-package#readme",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "ioredis": "^5.3.2"
+  }
+}
