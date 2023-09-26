@@ -1,7 +1,8 @@
 import { Redis } from 'ioredis';
 
-export class Authentication {
-  async redisConnection(
+class Authentication {
+  constructor() {}
+  static redisConnection(
     REDIS_HOST: string,
     REDIS_PORT: string,
     REDIS_PASSWORD: string,
@@ -16,3 +17,5 @@ export class Authentication {
     return access_token;
   }
 }
+
+export default Authentication;
