@@ -1,8 +1,7 @@
 import { Redis } from 'ioredis';
 
 export class Authentication {
-  constructor() {}
-  static redisConnection(
+  redisConnection(
     REDIS_HOST: string,
     REDIS_PORT: string,
     REDIS_PASSWORD: string,
