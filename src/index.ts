@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
 
-class Authentication {
+export class Authentication {
   constructor() {}
   static redisConnection(
     REDIS_HOST: string,
@@ -17,5 +17,3 @@ class Authentication {
     return access_token;
   }
 }
-
-export default Authentication;
