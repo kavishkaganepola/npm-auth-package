@@ -14,7 +14,7 @@ export class ModuleTestModule {
         },
         ModuleTestService,
       ],
-      exports: [ModuleTestModule],
+      exports: [ModuleTestService],
     };
   }
 }
