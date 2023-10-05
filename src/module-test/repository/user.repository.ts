@@ -1,10 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
-
-      // Get user details ( public details only )
+  // Get user details ( public details only )
   _validatePassword(password: string) {
     const regex = /^(?=.*\d)(?=.*\W+)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
 
@@ -48,21 +47,28 @@ export class UserRepository {
     }
   }
 
-    // hashing the password
-    async _hashPassword(password: string): Promise<string> {
-        const salt = await bcrypt.genSalt();
-        return bcrypt.hash(password, salt);
-      }
-    
-      // Code generate ( 6 numbers length ) for verify the user
-      _verificationCodeGenerate(length: number): number {
-        const randomNum: any = (
-          Math.pow(10, length)
-            .toString()
-            .slice(length - 1) +
-          Math.floor(Math.random() * Math.pow(10, length) + 1).toString()
-        ).slice(-length);
-        return Number(randomNum);
-      }
+  // hashing the password
+  async _hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return bcrypt.hash(password, salt);
+  }
 
+  // Code generate ( 6 numbers length ) for verify the user
+  _verificationCodeGenerate(length: number): number {
+    const randomNum: any = (
+      Math.pow(10, length)
+        .toString()
+        .slice(length - 1) +
+      Math.floor(Math.random() * Math.pow(10, length) + 1).toString()
+    ).slice(-length);
+    return Number(randomNum);
+  }
+
+  // Check password match
+  async _doesPasswordMatch(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
+  }
 }
