@@ -1,18 +1,11 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { TestDto } from './dtos/test.dto';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 
 @Injectable()
 export class ModuleTestService {
   constructor(
-    @Inject('MODULE_TEST')
-    private testDto: TestDto,
     private userRepository: UserRepository
   ) {}
-
-  async IsUsingSword(): Promise<boolean> {
-    return this.testDto.first_name == 'Sword';
-  }
 
   async signUp(password: string, verification_code_size: number): Promise<any> {
     const isPasswordValid = this.userRepository._validatePassword(password);

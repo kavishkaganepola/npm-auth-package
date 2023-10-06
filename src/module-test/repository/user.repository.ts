@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository {
+
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>
+  ) {}
+
   // Get user details ( public details only )
   _validatePassword(password: string) {
     const regex = /^(?=.*\d)(?=.*\W+)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
@@ -45,6 +52,10 @@ export class UserRepository {
         message: 'The password is valid.',
       };
     }
+  }
+
+  async findByUsername(username: string): Promise<any> {
+      return await this.userRepository.findOneBy({ username });
   }
 
   // hashing the password
