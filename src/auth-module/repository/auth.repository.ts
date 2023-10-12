@@ -1,15 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { DataSource, EntityTarget, Repository } from 'typeorm';
-import { DatabaseDto } from '../dtos/test.dto';
-import { DynamicRepository } from './dynamic.repository';
 
 @Injectable()
-export class UserRepository {
-  constructor(private dataSource: DataSource) {}
-  // Get user details ( public details only )
-  _validatePassword(password: string) {
+export class AuthRepository {
+  async _validatePassword(password: string) {
     const regex = /^(?=.*\d)(?=.*\W+)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
 
     if (!regex.test(password)) {
@@ -52,22 +46,12 @@ export class UserRepository {
     }
   }
 
-  async findByUsername(username: string): Promise<any> {
-    const dynamicCatRepository = createDynamicRepository(
-      'User',
-      this.dataSource
-    );
-    return await dynamicCatRepository.repository.findOneBy({ username });
-  }
-
-  // hashing the password
   async _hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(password, salt);
   }
 
-  // Code generate ( 6 numbers length ) for verify the user
-  _verificationCodeGenerate(length: number): number {
+  async _verificationCodeGenerate(length: number): Promise<number> {
     const randomNum: any = (
       Math.pow(10, length)
         .toString()
@@ -77,18 +61,16 @@ export class UserRepository {
     return Number(randomNum);
   }
 
-  // Check password match
   async _doesPasswordMatch(
     password: string,
     hashedPassword: string
   ): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
-}
 
-export function createDynamicRepository<T>(
-  entity: EntityTarget<T>,
-  dataSource: DataSource
-): DynamicRepository<T> {
-  return new DynamicRepository(entity, dataSource);
+  async _getUserId(userId: number) {
+    return {
+      id: userId,
+    };
+  }
 }
