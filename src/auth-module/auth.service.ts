@@ -1,22 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Provider } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './repository/auth.repository';
 import { RegisterType } from './types/user.types';
-import * as Redis from 'ioredis';
+import Redis from 'ioredis';
+import { ConfigDto } from './dtos/config.dto';
 
 @Injectable()
 export class AuthService {
-  private readonly redisClient: Redis.Redis;
+  private readonly redisClient: Redis;
   constructor(
+    @Inject('CONFIG_DTO')
+    private configDTO: ConfigDto,
     private userRepository: UserRepository,
     private authRepository: AuthRepository,
-    private jwtService: JwtService,
-  ) {    
+    private jwtService: JwtService
+  ) {
     this.redisClient = new Redis({
-    host: 'localhost', // Redis server host
-    port: 6379,        // Redis server port
-  });}
+      host: this.configDTO.REDIS_HOST,
+      port: this.configDTO.REDIS_PORT,
+      password: this.configDTO.REDIS_PASSWORD,
+    });
+  }
 
   async signUp(sign_up_dto: any, verification_code_size: number): Promise<any> {
     const is_password_valid = await this.authRepository._validatePassword(
@@ -77,6 +82,12 @@ export class AuthService {
       type: 'verification',
       user_id,
     });
+
+    await this.redisClient.sadd(
+      'whitelisted_access_tokens_npm',
+      sign_up_jwt_token
+    );
+    await this.redisClient.sadd('whitelisted_access_tokens_npm', mail_jwt_token);
 
     return {
       success: true,

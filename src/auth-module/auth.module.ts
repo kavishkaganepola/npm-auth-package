@@ -9,7 +9,15 @@ import { AuthRepository } from './repository/auth.repository';
 @Module({})
 export class AuthModule {
   static register(configDto: ConfigDto): DynamicModule {
-    const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, JWT_SECRET, JWT_EXPIRATION } = configDto;
+    const {
+      DB_HOST,
+      DB_PORT,
+      DB_USERNAME,
+      DB_PASSWORD,
+      DB_NAME,
+      JWT_SECRET,
+      JWT_EXPIRATION,
+    } = configDto;
     return {
       module: AuthModule,
       imports: [
@@ -23,13 +31,21 @@ export class AuthModule {
           autoLoadEntities: true,
         }),
         JwtModule.register({
-            secret: JWT_SECRET,
-            signOptions: {
-              expiresIn: JWT_EXPIRATION,
-            },
-          }),
+          secret: JWT_SECRET,
+          signOptions: {
+            expiresIn: JWT_EXPIRATION,
+          },
+        }),
       ],
-      providers: [AuthService, UserRepository, AuthRepository],
+      providers: [
+        {
+          provide: 'CONFIG_DTO',
+          useValue: configDto,
+        },
+        AuthService,
+        UserRepository,
+        AuthRepository,
+      ],
       exports: [AuthService],
     };
   }
